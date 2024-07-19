@@ -107,9 +107,9 @@ jobs:
         /usr/local/share/powershell /usr/local/share/chromium /usr/local/lib/node_modules
         sudo timedatectl set-timezone "$TZ"
         sudo chown $USER:$GROUPS $GITHUB_WORKSPACE
-        #git clone --recursive https://github.com/zhaojh329/lua-eco.git
-        #cd lua-eco && mkdir build && cd build
-        #cmake .. && sudo make install
+        # git clone --recursive https://github.com/zhaojh329/lua-eco.git
+        # cd lua-eco && mkdir build && cd build
+        # cmake .. && sudo make install
         
 
     - name: Clone source code
