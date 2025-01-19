@@ -15,7 +15,7 @@
 
 # Modify default IP 修改默认网关 '2024/7/15
 #sed -i 's/192.168.1.1/192.168.50.5/g' package/base-files/files/bin/config_generate
-sed -i 's/192.168.1.1/192.168.5.202/g' package/base-files/files/bin/config_generate
+sed -i 's/192.168.1.1/192.168.5.1/g' package/base-files/files/bin/config_generate
 
 # Modify aliyundrive-webdav
 echo 'start modify aliyundrive-webdav Makefile'
