@@ -166,7 +166,7 @@ jobs:
       run: df -hT
 
     - name: Upload bin directory
-      uses: actions/upload-artifact@main
+      uses: actions/upload-artifact@v4
       if: steps.compile.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true'
       with:
         name: OpenWrt_bin${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
@@ -182,7 +182,7 @@ jobs:
         echo "status=success" >>$GITHUB_OUTPUT
 
     - name: Upload firmware directory
-      uses: actions/upload-artifact@main
+      uses: actions/upload-artifact@v4
       if: steps.organize.outputs.status == 'success' && !cancelled()
       with:
         name: OpenWrt_firmware${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
@@ -234,7 +234,7 @@ jobs:
         retain_days: 1
         keep_minimum_runs: 3
 
-     - name: Remove old Releases
+    - name: Remove old Releases
       if: env.UPLOAD_RELEASE == 'true' && !cancelled()
       env:
         GH_TOKEN: ${{ github.token }}
@@ -243,6 +243,7 @@ jobs:
 
         releases=$(gh release list \
           --limit 100 \
+          --order desc \
           --json tagName \
           --jq '.[3:].tagName')
 
@@ -258,7 +259,7 @@ jobs:
         do
           if [ -n "$release" ]; then
             echo "Deleting release: $release"
-            gh release delete "$release" --yes
+            gh release delete "$release" --yes --cleanup-tag
           fi
         done <<< "$releases"
 
