@@ -234,15 +234,32 @@ jobs:
         retain_days: 1
         keep_minimum_runs: 3
 
-    - name: Remove old Releases
+     - name: Remove old Releases
       if: env.UPLOAD_RELEASE == 'true' && !cancelled()
       env:
         GH_TOKEN: ${{ github.token }}
       run: |
-        releases=$(gh release list --limit 100 --json tagName --jq '.[3:].tagName')
+        echo "Checking old releases..."
 
-        for release in $releases
+        releases=$(gh release list \
+          --limit 100 \
+          --json tagName \
+          --jq '.[3:].tagName')
+
+        if [ -z "$releases" ]; then
+          echo "No old releases need to delete."
+          exit 0
+        fi
+
+        echo "Old releases:"
+        echo "$releases"
+
+        while IFS= read -r release
         do
-          echo "Deleting release: $release"
-          gh release delete "$release" --yes
-        done
+          if [ -n "$release" ]; then
+            echo "Deleting release: $release"
+            gh release delete "$release" --yes
+          fi
+        done <<< "$releases"
+
+        echo "Old releases cleanup completed."
