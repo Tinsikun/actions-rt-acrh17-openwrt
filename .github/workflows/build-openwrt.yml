@@ -235,10 +235,14 @@ jobs:
         keep_minimum_runs: 3
 
     - name: Remove old Releases
-      uses: dev-drprasad/delete-older-releases@v5
       if: env.UPLOAD_RELEASE == 'true' && !cancelled()
-      with:
-        keep_latest: 3
-        delete_tags: true
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        releases=$(gh release list --limit 100 --json tagName --jq '.[3:].tagName')
+
+        for release in $releases
+        do
+          echo "Deleting release: $release"
+          gh release delete "$release" --yes
+        done
